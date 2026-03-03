@@ -1,24 +1,35 @@
 use std::env;
+use std::path::Path;
+use std::path::PathBuf;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    // let argc = args.len();
-    // let argv = args.clone();
-    // ^ idk if i need them tbh lmfao
 
     let ch: u32;
-    let mut __1flag: u32 = 0;
+    let mut lflag: bool = false;
 
-    let p: &[u8];
+    let mut p: PathBuf;
 
     for args in args.iter().skip(1) {
         match args.as_str() {
-            "-L" => __1flag = 1,
-            "-P" => __1flag = 0,
+            "-L" => lflag = true,
+            "-P" => lflag = false,
 
             _ => {
-                println!("test")
+                usage();
             }
         }
+        let p: Option<PathBuf> = if lflag { env::current_dir().ok() } else { None };
     }
+
+    if let Option::<PathBuf> = p {
+        println!("{}", Path::display())
+    } else {
+        println!("where te fuck is it")
+    }
+}
+
+fn usage() {
+    eprintln!("Usage: program [-L | -P]");
+    std::process::exit(1);
 }
